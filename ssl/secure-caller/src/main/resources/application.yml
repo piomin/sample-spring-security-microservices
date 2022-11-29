@@ -1,0 +1,8 @@
+server.port: 8443
+server.ssl:
+  enabled: true
+  key-store: /opt/secret/keystore.jks
+  key-store-password: ${PASSWORD}
+  trust-store: /opt/secret/truststore.jks
+  trust-store-password: ${PASSWORD}
+  client-auth: NEED
