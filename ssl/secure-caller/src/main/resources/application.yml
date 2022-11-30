@@ -1,4 +1,3 @@
-server.port: 9443
 server.ssl:
   enabled: true
   key-store: ${CERT_PATH}/keystore.jks
