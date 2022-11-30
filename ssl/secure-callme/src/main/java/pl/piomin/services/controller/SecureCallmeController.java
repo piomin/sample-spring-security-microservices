@@ -8,7 +8,7 @@ public class SecureCallmeController {
 
     @GetMapping("/callme")
     public String call() {
-        return "Hello!";
+        return "I'm `secure-callme`!";
     }
 
 }
