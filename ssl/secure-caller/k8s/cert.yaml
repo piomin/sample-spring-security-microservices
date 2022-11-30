@@ -1,0 +1,25 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: secure-caller-cert
+spec:
+  keystores:
+    jks:
+      passwordSecretRef:
+        name: jks-password-secret
+        key: password
+      create: true
+  issuerRef:
+    name: ss-clusterissuer
+    group: cert-manager.io
+    kind: ClusterIssuer
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  dnsNames:
+    - localhost
+    - secure-caller
+  secretName: secure-caller-cert
+  commonName: localhost
+  duration: 1h
+  renewBefore: 5m

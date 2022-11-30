@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: secure-callme
+  annotations:
+    secret.reloader.stakater.com/reload: "secure-caller-cert"
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: secure-callme
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: secure-callme
+    spec:
+      containers:
+        - image: piomin/secure-callme
+          name: secure-callme
+          ports:
+            - containerPort: 8443
+              name: https
+          env:
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: jks-password-secret
+            - name: CERT_PATH
+              value: /opt/secret
+          volumeMounts:
+            - mountPath: /opt/secret
+              name: cert
+      volumes:
+        - name: cert
+          secret:
+            secretName: secure-callme-cert
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: secure-callme
+  name: secure-callme
+spec:
+  ports:
+    - name: https
+      port: 8443
+      targetPort: 8443
+  selector:
+    app.kubernetes.io/name: secure-callme
+  type: ClusterIP

@@ -1,0 +1,6 @@
+apiVersion: skaffold/v2beta22
+kind: Config
+build:
+  artifacts:
+    - image: piomin/secure-callme
+      jib: {}
