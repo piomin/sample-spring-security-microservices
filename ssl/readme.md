@@ -39,3 +39,5 @@ Run the app in the `dev` mode:
 ```shell
 mvn spring-boot:run
 ```
+
+### Steps to run demo on Kubernetes
