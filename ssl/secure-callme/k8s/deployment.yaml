@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: secure-callme
   annotations:
-    secret.reloader.stakater.com/reload: "secure-caller-cert"
+    secret.reloader.stakater.com/reload: "secure-callme-cert"
 spec:
   selector:
     matchLabels:
