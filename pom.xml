@@ -14,5 +14,11 @@
 	</modules>
 	<packaging>pom</packaging>
 
+	<properties>
+		<sonar.projectKey>piomin_sample-spring-security-microservices</sonar.projectKey>
+		<sonar.organization>piomin</sonar.organization>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+	</properties>
+
 
 </project>
