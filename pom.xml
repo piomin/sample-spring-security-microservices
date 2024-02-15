@@ -11,6 +11,7 @@
 		<module>gateway</module>
 		<module>callme</module>
         <module>ssl</module>
+		<module>ssl/secure-callme-bundle</module>
 	</modules>
 	<packaging>pom</packaging>
 

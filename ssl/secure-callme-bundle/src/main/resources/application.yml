@@ -1,0 +1,20 @@
+server.port: 8443
+server.ssl.bundle: server
+spring.profiles.active: dev
+
+---
+spring.config.activate.on-profile: dev
+spring.ssl.bundle.jks:
+  server:
+    keystore:
+      location: classpath:keystore.jks
+      password: 123456
+      type: JKS
+---
+spring.config.activate.on-profile: prod
+spring.ssl.bundle.jks:
+  server:
+    keystore:
+      location: ${CERT_PATH}/keystore.jks
+      password: ${PASSWORD}
+      type: JKS
