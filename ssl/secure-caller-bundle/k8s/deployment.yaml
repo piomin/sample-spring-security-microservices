@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: secure-caller-bundle
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: secure-caller-bundle
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: secure-caller-bundle
+    spec:
+      containers:
+        - image: piomin/secure-caller-bundle
+          name: secure-caller-bundle
+          ports:
+            - containerPort: 8443
+              name: https
+          env:
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: jks-password-secret
+            - name: CERT_PATH
+              value: /opt/secret
+            - name: CLIENT_CERT_PATH
+              value: /opt/client-secret
+            - name: HOST
+              value: secure-callme-bundle
+            - name: SPRING_PROFILES_ACTIVE
+              value: prod
+          volumeMounts:
+            - mountPath: /opt/secret
+              name: cert
+            - mountPath: /opt/client-secret
+              name: client-cert
+      volumes:
+        - name: cert
+          secret:
+            secretName: secure-caller-cert
+        - name: client-cert
+          secret:
+            secretName: secure-callme-cert
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: secure-caller-bundle
+  name: secure-caller-bundle
+spec:
+  ports:
+    - name: https
+      port: 8443
+      targetPort: 8443
+  selector:
+    app.kubernetes.io/name: secure-caller-bundle
+  type: ClusterIP
