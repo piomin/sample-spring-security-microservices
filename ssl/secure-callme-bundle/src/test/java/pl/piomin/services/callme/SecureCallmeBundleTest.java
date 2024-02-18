@@ -6,6 +6,7 @@ import org.springframework.boot.ssl.SslBundles;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
@@ -23,10 +24,12 @@ public class SecureCallmeBundleTest {
 
     @Autowired
     TestRestTemplate restTemplate;
+    @LocalServerPort
+    Integer port;
 
     @Test
     void call() {
-        String res = restTemplate.getForObject("/callme", String.class);
+        String res = restTemplate.getForObject("https://localhost:" + port + "/callme", String.class);
         assertEquals("I'm secure-callme-bundle!", res);
     }
 
