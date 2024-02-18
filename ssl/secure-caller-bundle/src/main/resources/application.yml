@@ -15,8 +15,12 @@ spring.ssl.bundle.jks:
       type: JKS
   client:
     reload-on-update: true
+    keystore:
+      location: classpath:keystore-client.jks
+      password: 123456
+      type: JKS
     truststore:
-      location: classpath:truststore2.jks
+      location: classpath:truststore-client.jks
       password: 123456
       type: JKS
 ---
