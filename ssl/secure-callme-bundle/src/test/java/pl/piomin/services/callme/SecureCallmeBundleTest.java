@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.web.client.RestTemplate;
 
 import javax.net.ssl.SSLContext;
 
@@ -23,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class SecureCallmeBundleTest {
 
     @Autowired
-    TestRestTemplate restTemplate;
+    RestTemplate restTemplate;
     @LocalServerPort
     Integer port;
 
@@ -37,9 +38,9 @@ public class SecureCallmeBundleTest {
     public static class TestRestTemplateConfiguration {
         @Bean
         @Primary
-        TestRestTemplate testRestTemplate(RestTemplateBuilder builder, SslBundles sslBundles) {
+        RestTemplate testRestTemplate(RestTemplateBuilder builder, SslBundles sslBundles) {
             builder.setSslBundle(sslBundles.getBundle("server"));
-            return new TestRestTemplate(builder);
+            return builder.build();
         }
     }
 }
