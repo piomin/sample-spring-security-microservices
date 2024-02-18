@@ -3,4 +3,6 @@ kind: Config
 build:
   artifacts:
     - image: piomin/secure-callme-bundle
-      jib: {}
+      jib:
+        args:
+          - -DskipTests

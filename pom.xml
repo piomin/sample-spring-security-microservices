@@ -12,7 +12,8 @@
 		<module>callme</module>
         <module>ssl</module>
 		<module>ssl/secure-callme-bundle</module>
-	</modules>
+        <module>ssl/secure-caller-bundle</module>
+    </modules>
 	<packaging>pom</packaging>
 
 	<properties>

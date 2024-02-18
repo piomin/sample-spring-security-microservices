@@ -17,8 +17,9 @@ spec:
     algorithm: ECDSA
     size: 256
   dnsNames:
-    - secure-callme
+    - secure-callme-bundle
+    - localhost
   secretName: secure-callme-cert
-  commonName: secure-callme
+  commonName: secure-callme-bundle
   duration: 1h
   renewBefore: 5m
