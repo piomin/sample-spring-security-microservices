@@ -38,9 +38,8 @@ public class SecureCallmeBundleTest {
     public static class TestRestTemplateConfiguration {
         @Bean
         @Primary
-        RestTemplate testRestTemplate(RestTemplateBuilder builder, SslBundles sslBundles) {
-            builder.setSslBundle(sslBundles.getBundle("server"));
-            return builder.build();
+        RestTemplate restTemplate(RestTemplateBuilder builder, SslBundles sslBundles) {
+            return builder.setSslBundle(sslBundles.getBundle("server")).build();
         }
     }
 }
