@@ -2,25 +2,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>pl.piomin.services</groupId>
         <artifactId>sample-spring-security-microservices</artifactId>
         <version>1.1-SNAPSHOT</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>ssl</artifactId>
+    <artifactId>oauth</artifactId>
     <packaging>pom</packaging>
 
-    <properties>
-        <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
-    </properties>
-
     <modules>
-        <module>secure-caller</module>
-        <module>secure-callme</module>
-        <module>secure-callme-bundle</module>
-        <module>secure-caller-bundle</module>
+        <module>callme</module>
+        <module>gateway</module>
     </modules>
 
 </project>
