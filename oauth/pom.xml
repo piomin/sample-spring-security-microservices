@@ -12,6 +12,10 @@
     <artifactId>oauth</artifactId>
     <packaging>pom</packaging>
 
+    <properties>
+        <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
+    </properties>
+
     <modules>
         <module>callme</module>
         <module>gateway</module>
