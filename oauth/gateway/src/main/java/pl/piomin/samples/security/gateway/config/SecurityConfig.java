@@ -16,7 +16,7 @@ public class SecurityConfig {
 	public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
 		http.authorizeExchange(exchanges -> exchanges.anyExchange().authenticated())
 			.oauth2Login(withDefaults());
-		http.csrf().disable();
+		http.csrf(ServerHttpSecurity.CsrfSpec::disable);
 		return http.build();
 	}
 
