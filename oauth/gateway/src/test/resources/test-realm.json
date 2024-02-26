@@ -1,0 +1,73 @@
+{
+  "realm": "demo",
+  "enabled": true,
+  "users": [
+    {
+      "username": "keycloak",
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "test"
+        }
+      ],
+      "realmRoles": [
+        "user"
+      ]
+    }
+  ],
+  "roles": {
+    "realm": [
+      {
+        "name": "user",
+        "description": "User privileges"
+      },
+      {
+        "name": "admin",
+        "description": "Administrator privileges"
+      }
+    ]
+  },
+  "defaultRoles": [
+    "user"
+  ],
+  "clients": [
+    {
+      "clientId": "spring-without-test-scope",
+      "enabled": true,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "f6fc369d-49ce-4132-8282-5b5d413eba23",
+      "publicClient": true,
+      "redirectUris": [
+        "*"
+      ],
+      "webOrigins": [
+        "*"
+      ],
+      "defaultClientScopes": [
+        "role_list",
+        "profile",
+        "email"
+      ]
+    },
+    {
+      "clientId": "spring-with-test-scope",
+      "enabled": true,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "c6480137-1526-4c3e-aed3-295aabcb7609",
+      "publicClient": true,
+      "redirectUris": [
+        "*"
+      ],
+      "webOrigins": [
+        "*"
+      ],
+      "defaultClientScopes": [
+        "role_list",
+        "profile",
+        "email",
+        "TEST"
+      ]
+    }
+  ]
+}

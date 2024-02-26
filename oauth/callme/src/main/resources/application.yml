@@ -12,4 +12,4 @@ logging.level:
   org.springframework.security: DEBUG
   org.springframework.web.reactive.function.client: TRACE
 
-server.port: 8040
+#server.port: 8040
