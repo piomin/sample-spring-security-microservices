@@ -5,11 +5,12 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8080/auth/realms/master
+          jwk-set-uri: http://localhost:8080/realms/demo/protocol/openid-connect/certs
+#          issuer-uri: http://localhost:8080/realms/demo
 
 logging.level:
   org.springframework.cloud.gateway: DEBUG
   org.springframework.security: DEBUG
   org.springframework.web.reactive.function.client: TRACE
 
-#server.port: 8040
+server.port: 8040

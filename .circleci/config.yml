@@ -15,7 +15,7 @@ jobs:
       - checkout
       - run:
           name: Maven Tests
-          command: mvn test
+          command: mvn verify -Pbuild-image
 
 orbs:
   maven: circleci/maven@1.4.1

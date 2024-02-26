@@ -6,16 +6,23 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
 public class GatewayApplicationTests {
 
     @Autowired
-    TestRestTemplate restTemplate;
+    RestTemplate restTemplate;
+    @LocalServerPort
+    Integer port;
 
     @Container
     static KeycloakContainer keycloak = new KeycloakContainer()
@@ -48,6 +55,15 @@ public class GatewayApplicationTests {
 
     @Test
     void shouldCall() {
-        restTemplate.getForObject("/callme", String.class);
+        ResponseEntity<String> r = restTemplate.getForEntity("http://localhost:" + port + "/callme", String.class);
+        assertEquals(200, r.getStatusCode().value());
+        assertTrue(r.getBody().contains("Login with OAuth 2.0"));
+    }
+
+//    @Test
+    void shouldGetToken() {
+        ResponseEntity<String> r = restTemplate.getForEntity("/token", String.class);
+        assertEquals(200, r.getStatusCode().value());
+        assertNotNull(r.getBody());
     }
 }
