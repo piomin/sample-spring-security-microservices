@@ -18,37 +18,34 @@ spec:
             - containerPort: 8443
               name: https
           env:
-            - name: PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key: password
-                  name: jks-password-secret
             - name: CERT_PATH
               value: /opt/secret
             - name: CLIENT_CERT_PATH
-              value: /opt/client-secret
+              value: /opt/client-cert
             - name: HOST
-              value: secure-callme-bundle
+              value: secure-callme-bundle.demo-secure.svc
             - name: SPRING_PROFILES_ACTIVE
               value: prod
           volumeMounts:
             - mountPath: /opt/secret
               name: cert
-            - mountPath: /opt/client-secret
+            - mountPath: /opt/client-cert
               name: client-cert
       volumes:
         - name: cert
           secret:
-            secretName: secure-caller-cert
+            secretName: secure-caller-bundle
         - name: client-cert
-          secret:
-            secretName: secure-callme-cert
+          configMap:
+            name: secure-caller-bundle
 ---
 apiVersion: v1
 kind: Service
 metadata:
   labels:
     app.kubernetes.io/name: secure-caller-bundle
+  annotations:
+    service.beta.openshift.io/serving-cert-secret-name: secure-caller-bundle
   name: secure-caller-bundle
 spec:
   ports:
@@ -58,3 +55,24 @@ spec:
   selector:
     app.kubernetes.io/name: secure-caller-bundle
   type: ClusterIP
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: secure-caller-bundle
+  labels:
+    app: secure-caller-bundle
+    app.kubernetes.io/component: secure-caller-bundle
+    app.kubernetes.io/instance: secure-caller-bundle
+  annotations:
+    openshift.io/host.generated: 'true'
+spec:
+  tls:
+    termination: passthrough
+  to:
+    kind: Service
+    name: secure-caller-bundle
+    weight: 100
+  port:
+    targetPort: https
+  wildcardPolicy: None

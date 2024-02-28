@@ -18,11 +18,6 @@ spec:
             - containerPort: 8443
               name: https
           env:
-            - name: PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key: password
-                  name: jks-password-secret
             - name: CERT_PATH
               value: /opt/secret
             - name: SPRING_PROFILES_ACTIVE
@@ -33,13 +28,15 @@ spec:
       volumes:
         - name: cert
           secret:
-            secretName: secure-callme-cert
+            secretName: secure-callme-bundle
 ---
 apiVersion: v1
 kind: Service
 metadata:
   labels:
     app.kubernetes.io/name: secure-callme-bundle
+  annotations:
+    service.beta.openshift.io/serving-cert-secret-name: secure-callme-bundle
   name: secure-callme-bundle
 spec:
   ports:
@@ -49,3 +46,24 @@ spec:
   selector:
     app.kubernetes.io/name: secure-callme-bundle
   type: ClusterIP
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: secure-callme-bundle
+  labels:
+    app: secure-callme-bundle
+    app.kubernetes.io/component: secure-callme-bundle
+    app.kubernetes.io/instance: secure-callme-bundle
+  annotations:
+    openshift.io/host.generated: 'true'
+spec:
+  tls:
+    termination: passthrough
+  to:
+    kind: Service
+    name: secure-callme-bundle
+    weight: 100
+  port:
+    targetPort: https
+  wildcardPolicy: None

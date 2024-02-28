@@ -1,5 +1,5 @@
 server.port: 8443
-server.ssl.client-auth: NEED
+#server.ssl.client-auth: NEED
 server.ssl.bundle: server
 spring.profiles.active: dev
 
@@ -18,14 +18,8 @@ spring.ssl.bundle.jks:
       type: JKS
 ---
 spring.config.activate.on-profile: prod
-spring.ssl.bundle.jks:
+spring.ssl.bundle.pem:
   server:
-    reload-on-update: true
     keystore:
-      location: ${CERT_PATH}/keystore.jks
-      password: ${PASSWORD}
-      type: JKS
-    truststore:
-      location: ${CERT_PATH}/truststore.jks
-      password: ${PASSWORD}
-      type: JKS
+      certificate: ${CERT_PATH}/tls.crt
+      private-key: ${CERT_PATH}/tls.key
