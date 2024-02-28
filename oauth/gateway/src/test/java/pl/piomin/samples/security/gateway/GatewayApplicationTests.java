@@ -2,21 +2,21 @@ package pl.piomin.samples.security.gateway;
 
 import dasniko.testcontainers.keycloak.KeycloakContainer;
 import org.apache.http.client.utils.URIBuilder;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.*;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.containers.Network;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -24,7 +24,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @Testcontainers
@@ -34,7 +34,7 @@ public class GatewayApplicationTests {
     static String accessToken;
 
     @Autowired
-    TestRestTemplate restTemplate;
+    WebTestClient webTestClient;
 
     @Container
     static KeycloakContainer keycloak = new KeycloakContainer()
@@ -62,9 +62,9 @@ public class GatewayApplicationTests {
     @Test
     @Order(1)
     void shouldBeRedirectedToLoginPage() {
-        ResponseEntity<String> r = restTemplate.getForEntity("/callme/ping", String.class);
-        assertEquals(200, r.getStatusCode().value());
-        assertTrue(r.getBody().contains("Sign in to your account"));
+        webTestClient.get().uri("/callme/ping")
+                .exchange()
+                .expectStatus().is3xxRedirection();
     }
 
     @Test
@@ -95,14 +95,10 @@ public class GatewayApplicationTests {
     @Test
     @Order(3)
     void shouldReturnToken() {
-        System.out.println("!!!!!!!" + accessToken);
-        WebClient webclient = WebClient.builder().build();
-        String body = webclient.get().uri("http://localhost:8060/callme/ping")
+        webTestClient.get().uri("/callme/ping")
                 .header("Authorization", "Bearer " + accessToken)
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
-        System.out.println("!!!!!!!" + body);
-        assertNotNull(body);
+                .exchange()
+                .expectStatus().is2xxSuccessful()
+                .expectBody(String.class).isEqualTo("Hello!");
     }
 }

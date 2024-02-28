@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/callme")
 public class CallmeController {
 
-	@PreAuthorize("hasAuthority('SCOPE_TEST')")
-	@GetMapping("/ping")
-	public String ping() {
-		SecurityContext context = SecurityContextHolder.getContext();
-		Authentication authentication = context.getAuthentication();
-		return "Scopes: " + authentication.getAuthorities();
-	}
+    @PreAuthorize("hasAuthority('SCOPE_TEST')")
+    @GetMapping("/ping")
+    public String ping() {
+        SecurityContext context = SecurityContextHolder.getContext();
+        Authentication authentication = context.getAuthentication();
+        return "Scopes: " + authentication.getAuthorities();
+    }
 }

@@ -16,20 +16,20 @@ import org.springframework.web.server.WebSession;
 @RestController
 public class GatewayApplication {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(GatewayApplication.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GatewayApplication.class);
 
-	public static void main(String[] args) {
-		SpringApplication.run(GatewayApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(GatewayApplication.class, args);
+    }
 
-	@GetMapping(value = "/token")
-	public Mono<String> getHome(@RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient) {
-		return Mono.just(authorizedClient.getAccessToken().getTokenValue());
-	}
+    @GetMapping(value = "/token")
+    public Mono<String> getHome(@RegisteredOAuth2AuthorizedClient OAuth2AuthorizedClient authorizedClient) {
+        return Mono.just(authorizedClient.getAccessToken().getTokenValue());
+    }
 
-	@GetMapping("/")
-	public Mono<String> index(WebSession session) {
-		return Mono.just(session.getId());
-	}
+    @GetMapping("/")
+    public Mono<String> index(WebSession session) {
+        return Mono.just(session.getId());
+    }
 
 }

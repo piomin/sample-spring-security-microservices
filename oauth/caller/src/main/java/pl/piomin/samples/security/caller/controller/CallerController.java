@@ -17,26 +17,26 @@ import org.springframework.web.reactive.function.client.WebClient;
 @RequestMapping("/caller")
 public class CallerController {
 
-	private RestTemplate restTemplate;
-	private WebClient webClient;
+    private RestTemplate restTemplate;
+    private WebClient webClient;
 
-	public CallerController(RestTemplate restTemplate, WebClient webClient) {
-		this.restTemplate = restTemplate;
-		this.webClient = webClient;
-	}
+    public CallerController(RestTemplate restTemplate, WebClient webClient) {
+        this.restTemplate = restTemplate;
+        this.webClient = webClient;
+    }
 
-	@PreAuthorize("hasAuthority('SCOPE_TEST')")
-	@GetMapping("/ping")
-	public String ping() {
-		SecurityContext context = SecurityContextHolder.getContext();
-		Authentication authentication = context.getAuthentication();
+    @PreAuthorize("hasAuthority('SCOPE_TEST')")
+    @GetMapping("/ping")
+    public String ping() {
+        SecurityContext context = SecurityContextHolder.getContext();
+        Authentication authentication = context.getAuthentication();
 
-		String scopes = webClient
-				.get()
-				.uri("http://localhost:8040/callme/ping")
-				.retrieve()
-				.bodyToMono(String.class)
-				.block();
-		return "Callme scopes: " + scopes;
-	}
+        String scopes = webClient
+                .get()
+                .uri("http://localhost:8040/callme/ping")
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+        return "Callme scopes: " + scopes;
+    }
 }
