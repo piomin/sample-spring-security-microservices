@@ -10,8 +10,14 @@ spring:
           uri: http://localhost:8040
           predicates:
             - Path=/callme/**
-#          filters:
-#            - RemoveRequestHeader=Cookie
+          filters:
+            - RemoveRequestHeader=Cookie
+        - id: caller-service
+          uri: http://localhost:8020
+          predicates:
+            - Path=/caller/**
+          filters:
+            - RemoveRequestHeader=Cookie
   security:
     oauth2:
       client:

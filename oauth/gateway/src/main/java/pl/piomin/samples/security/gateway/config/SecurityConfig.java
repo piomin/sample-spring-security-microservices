@@ -30,26 +30,26 @@ public class SecurityConfig {
 		return http.build();
 	}
 
-	@Bean
-	WebClient webClient(ReactiveOAuth2AuthorizedClientManager authorizedClientManager) {
-		ServerOAuth2AuthorizedClientExchangeFilterFunction oauth2Client =
-				new ServerOAuth2AuthorizedClientExchangeFilterFunction(authorizedClientManager);
-		return WebClient.builder()
-				.filter(oauth2Client)
-				.build();
-	}
+//	@Bean
+//	WebClient webClient(ReactiveOAuth2AuthorizedClientManager authorizedClientManager) {
+//		ServerOAuth2AuthorizedClientExchangeFilterFunction oauth2Client =
+//				new ServerOAuth2AuthorizedClientExchangeFilterFunction(authorizedClientManager);
+//		return WebClient.builder()
+//				.filter(oauth2Client)
+//				.build();
+//	}
 
-	@Bean
-	public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> authorizationCodeAccessTokenResponseClient() {
-		DefaultAuthorizationCodeTokenResponseClient accessTokenResponseClient =
-				new DefaultAuthorizationCodeTokenResponseClient();
-		accessTokenResponseClient.setRestOperations(restTemplate());
+//	@Bean
+//	public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> authorizationCodeAccessTokenResponseClient() {
+//		DefaultAuthorizationCodeTokenResponseClient accessTokenResponseClient =
+//				new DefaultAuthorizationCodeTokenResponseClient();
+//		accessTokenResponseClient.setRestOperations(restTemplate());
+//
+//		return accessTokenResponseClient;
+//	}
 
-		return accessTokenResponseClient;
-	}
-
-	@Bean
-	public RestTemplate restTemplate() {
-		return new RestTemplateBuilder().build();
-	}
+//	@Bean
+//	public RestTemplate restTemplate() {
+//		return new RestTemplateBuilder().build();
+//	}
 }

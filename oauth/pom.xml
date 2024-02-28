@@ -19,6 +19,7 @@
     <modules>
         <module>callme</module>
         <module>gateway</module>
+        <module>caller</module>
     </modules>
 
 </project>
