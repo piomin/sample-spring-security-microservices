@@ -4,22 +4,25 @@ spring:
   cloud:
     gateway:
       default-filters:
-        - TokenRelay
+        - TokenRelay=
       routes:
         - id: callme-service
           uri: http://localhost:8040
           predicates:
             - Path=/callme/**
-          filters:
-            - RemoveRequestHeader=Cookie
+#          filters:
+#            - RemoveRequestHeader=Cookie
         - id: caller-service
           uri: http://localhost:8020
           predicates:
             - Path=/caller/**
-          filters:
-            - RemoveRequestHeader=Cookie
+#          filters:
+#            - RemoveRequestHeader=Cookie
   security:
     oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8080/realms/demo/protocol/openid-connect/certs
       client:
         provider:
           keycloak:

@@ -16,6 +16,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.Network;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -25,7 +26,7 @@ import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @Testcontainers
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class GatewayApplicationTests {
@@ -34,43 +35,23 @@ public class GatewayApplicationTests {
 
     @Autowired
     TestRestTemplate restTemplate;
-    @LocalServerPort
-    Integer port;
 
     @Container
     static KeycloakContainer keycloak = new KeycloakContainer()
             .withRealmImportFile("realm-export.json")
             .withExposedPorts(8080);
 
-    @Container
-    static GenericContainer callme = new GenericContainer("sample-spring-security-microservices/callme:1.1-SNAPSHOT")
-            .withExposedPorts(8080);
-
     @DynamicPropertySource
     static void registerResourceServerIssuerProperty(DynamicPropertyRegistry registry) {
         registry.add("spring.security.oauth2.client.provider.keycloak.issuer-uri",
                 () -> keycloak.getAuthServerUrl() + "/realms/demo");
+        registry.add("spring.security.oauth2.resourceserver.jwt.jwk-set-uri",
+                () -> keycloak.getAuthServerUrl() + "/realms/demo/protocol/openid-connect/certs");
         registry.add("spring.cloud.gateway.routes[0].uri",
-                () -> "http://localhost:" + callme.getFirstMappedPort());
+                () -> "http://localhost:8060");
         registry.add("spring.cloud.gateway.routes[0].id", () -> "callme-service");
         registry.add("spring.cloud.gateway.routes[0].predicates[0]", () -> "Path=/callme/**");
-        registry.add("spring.cloud.gateway.routes[0].filters[0]", () -> "RemoveRequestHeader=Cookie");
     }
-
-//    @BeforeAll
-//    static void init() {
-//        System.setProperty("spring.security.oauth2.client.provider.keycloak.token-uri",
-//                "http://localhost:" + keycloak.getFirstMappedPort() + "/auth/realms/demo/protocol/openid-connect/token");
-//        System.setProperty("spring.security.oauth2.client.provider.keycloak.authorization-uri",
-//                "http://localhost:" + keycloak.getFirstMappedPort() + "/auth/realms/demo/protocol/openid-connect/auth");
-//        System.setProperty("spring.security.oauth2.client.provider.keycloak.userinfo-uri",
-//                "http://localhost:" + keycloak.getFirstMappedPort() + "/auth/realms/demo/protocol/openid-connect/userinfo");
-//        System.setProperty("spring.cloud.gateway.routes[0].uri",
-//                "http://localhost:" + callme.getFirstMappedPort());
-//        System.setProperty("spring.cloud.gateway.routes[0].id", "callme-service");
-//        System.setProperty("spring.cloud.gateway.routes[0].predicates[0]", "Path=/callme/**");
-//        System.setProperty("spring.cloud.gateway.routes[0].filters[0]", "RemoveRequestHeader=Cookie");
-//    }
 
     @Test
     @Order(1)
@@ -115,18 +96,13 @@ public class GatewayApplicationTests {
     @Order(3)
     void shouldReturnToken() {
         System.out.println("!!!!!!!" + accessToken);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(accessToken);
-        HttpEntity<Object> entity = new HttpEntity<>(headers);
         WebClient webclient = WebClient.builder().build();
-        String body = webclient.get().uri("http://localhost:" + port + "/token")
+        String body = webclient.get().uri("http://localhost:8060/callme/ping")
                 .header("Authorization", "Bearer " + accessToken)
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
         System.out.println("!!!!!!!" + body);
-//        ResponseEntity<String> r = restTemplate.exchange("/callme/ping", HttpMethod.GET, entity, String.class);
-//        assertEquals(200, r.getStatusCode().value());
         assertNotNull(body);
     }
 }
