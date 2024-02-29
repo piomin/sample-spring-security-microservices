@@ -10,14 +10,10 @@ spring:
           uri: http://localhost:8040
           predicates:
             - Path=/callme/**
-#          filters:
-#            - RemoveRequestHeader=Cookie
         - id: caller-service
           uri: http://localhost:8020
           predicates:
             - Path=/caller/**
-#          filters:
-#            - RemoveRequestHeader=Cookie
   security:
     oauth2:
       resourceserver:
@@ -26,18 +22,13 @@ spring:
       client:
         provider:
           keycloak:
-#            token-uri: http://localhost:8080/realms/demo/protocol/openid-connect/token
-#            authorization-uri: http://localhost:8080/realms/demo/protocol/openid-connect/auth
-#            userinfo-uri: http://localhost:8080/realms/demo/protocol/openid-connect/userinfo
-#            user-name-attribute: preferred_username
             issuer-uri: http://localhost:8080/realms/demo
         registration:
-          keycloak-with-test-scope:
+          spring-with-test-scope:
             provider: keycloak
             client-id: spring-with-test-scope
             client-secret: IWLSnakHG8aNTWNaWuSj0a11UY4lzxd9
             authorization-grant-type: authorization_code
-#            redirect-uri: "{baseUrl}/login/oauth2/code/keycloak"
             scope: openid
 #          keycloak-without-test-scope:
 #            provider: keycloak
