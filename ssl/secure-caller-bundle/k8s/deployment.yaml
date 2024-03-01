@@ -11,6 +11,23 @@ spec:
       labels:
         app.kubernetes.io/name: secure-caller-bundle
     spec:
+      initContainers:
+        - name: pem-to-truststore
+          image: registry.access.redhat.com/ubi8/openjdk-17:latest
+          env:
+            - name: ca_bundle
+              value: /opt/client-cert/service-ca.crt
+            - name: truststore_jks
+              value: /opt/truststore/truststore.jks
+            - name: password
+              value: changeit
+          command: ['/bin/bash']
+          args: ['-c', "csplit -z -f crt- $ca_bundle '/-----BEGIN CERTIFICATE-----/' '{*}' && for file in crt-*; do keytool -import -noprompt -keystore $truststore_jks -file $file -storepass changeit -alias service-$file; done"]
+          volumeMounts:
+            - mountPath: /opt/client-cert
+              name: client-cert
+            - mountPath: /opt/truststore
+              name: truststore
       containers:
         - image: piomin/secure-caller-bundle
           name: secure-caller-bundle
@@ -22,6 +39,8 @@ spec:
               value: /opt/secret
             - name: CLIENT_CERT_PATH
               value: /opt/client-cert
+            - name: TRUSTSTORE_PATH
+              value: /opt/truststore
             - name: HOST
               value: secure-callme-bundle.demo-secure.svc
             - name: SPRING_PROFILES_ACTIVE
@@ -31,6 +50,8 @@ spec:
               name: cert
             - mountPath: /opt/client-cert
               name: client-cert
+            - mountPath: /opt/truststore
+              name: truststore
       volumes:
         - name: cert
           secret:
@@ -38,6 +59,8 @@ spec:
         - name: client-cert
           configMap:
             name: secure-caller-bundle
+        - name: truststore
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service

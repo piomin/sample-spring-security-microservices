@@ -31,6 +31,12 @@ spring.ssl.bundle.pem:
     keystore:
       certificate: ${CERT_PATH}/tls.crt
       private-key: ${CERT_PATH}/tls.key
+#  client:
+#    truststore:
+#      certificate: ${CLIENT_CERT_PATH}/service-ca.crt
+spring.ssl.bundle.jks:
   client:
     truststore:
-      certificate: ${CLIENT_CERT_PATH}/service-ca.crt
+      location: ${TRUSTSTORE_PATH}/truststore.jks
+      password: changeit
+      type: JKS
