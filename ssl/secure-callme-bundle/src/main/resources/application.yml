@@ -2,9 +2,15 @@ server.port: 8443
 server.ssl.client-auth: NEED
 server.ssl.bundle: server
 spring.profiles.active: dev
+management.endpoints.web.exposure.include: health, info
+management.info.ssl.enabled: true
+management.info.os.enabled: false
+management.info.java.enabled: false
+management.endpoint.health.show-details: always
 
 ---
 spring.config.activate.on-profile: dev
+server.ssl.client-auth: NONE
 spring.ssl.bundle.jks:
   server:
     reload-on-update: true
