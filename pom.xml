@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.0-M3</version>
+        <version>3.3.4</version>
         <relativePath/>
     </parent>
 
@@ -27,6 +27,7 @@
     <modules>
         <module>ssl</module>
         <module>oauth</module>
+        <module>saml</module>
     </modules>
 
 </project>

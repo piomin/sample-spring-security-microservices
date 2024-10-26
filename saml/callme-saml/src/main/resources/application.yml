@@ -1,0 +1,29 @@
+server.port: 8081
+
+spring:
+  security:
+    saml2:
+      relyingparty:
+        registration:
+          keycloak:
+            identityprovider:
+              entity-id: https://localhost:8443/realms/spring-boot-keycloak
+              verification.credentials:
+                - certificate-location: classpath:rp-certificate.crt
+              singlesignon.url: https://localhost:8443/realms/spring-boot-keycloak/protocol/saml
+              singlesignon.sign-request: false
+            signing:
+              credentials:
+                - private-key-location: classpath:rp-key.key
+                  certificate-location: classpath:rp-certificate.crt
+#            singlelogout:
+#              url: https://localhost:8443/realms/spring-boot-keycloak
+#              binding: POST
+#              response-url: "{baseUrl}/logout/saml2/sso"
+            assertingparty:
+#              metadata-uri: classpath:metadata/metadata-idp.xml
+              metadata-uri: https://localhost:8443/realms/spring-boot-keycloak/protocol/saml/descriptor
+
+logging.level:
+  org.opensaml: TRACE
+  org.springframework.security: TRACE

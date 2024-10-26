@@ -1,0 +1,21 @@
+services:
+  keycloak:
+#    image: quay.io/keycloak/keycloak:24.0
+    image: registry.redhat.io/rhbk/keycloak-rhel9:24-17
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KC_HTTP_ENABLED=true
+      - KC_HTTPS_CERTIFICATE_KEY_FILE=/opt/keycloak/conf/localhost.key.pem
+      - KC_HTTPS_CERTIFICATE_FILE=/opt/keycloak/conf/localhost.crt.pem
+      - KC_HTTPS_TRUST_STORE_FILE=/opt/keycloak/conf/truststore.jks
+      - KC_HTTPS_TRUST_STORE_PASSWORD=123456
+    ports:
+      - 8080:8080
+      - 8443:8443
+    volumes:
+      - /Users/pminkows/IdeaProjects/sample-spring-security-microservices/oauth/localhost-key.pem:/opt/keycloak/conf/localhost.key.pem
+      - /Users/pminkows/IdeaProjects/sample-spring-security-microservices/oauth/localhost-crt.pem:/opt/keycloak/conf/localhost.crt.pem
+      - /Users/pminkows/IdeaProjects/sample-spring-security-microservices/oauth/truststore.jks:/opt/keycloak/conf/truststore.jks
+      - ./config/:/opt/keycloak/data/import:ro
+    command: start-dev --import-realm
