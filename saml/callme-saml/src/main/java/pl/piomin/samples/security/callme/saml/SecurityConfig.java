@@ -1,25 +1,26 @@
 package pl.piomin.samples.security.callme.saml;
 
 import org.opensaml.core.xml.schema.impl.XSStringImpl;
+import org.opensaml.saml.saml2.core.Attribute;
+import org.opensaml.saml.saml2.core.AttributeStatement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.AuthenticatedPrincipal;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.saml2.core.Saml2ResponseValidatorResult;
 import org.springframework.security.saml2.provider.service.authentication.OpenSaml4AuthenticationProvider;
 import org.springframework.security.saml2.provider.service.authentication.Saml2Authentication;
-import org.springframework.security.saml2.provider.service.metadata.OpenSamlMetadataResolver;
-import org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistrationRepository;
-import org.springframework.security.saml2.provider.service.web.DefaultRelyingPartyRegistrationResolver;
-import org.springframework.security.saml2.provider.service.web.Saml2MetadataFilter;
-import org.springframework.security.saml2.provider.service.web.authentication.Saml2WebSsoAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
+
+import java.util.List;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -38,31 +39,45 @@ public class SecurityConfig {
             Saml2ResponseValidatorResult result = OpenSaml4AuthenticationProvider
                     .createDefaultResponseValidator()
                     .convert(responseToken);
-            if (!result.getErrors().isEmpty()) {
+            if (result == null || result.hasErrors()) {
                 String inResponseTo = responseToken.getResponse().getInResponseTo();
-//                throw new CustomSaml2AuthenticationException(result, inResponseTo);
+                throw new CustomSamlValidationException(inResponseTo);
             }
-            LOG.info("!!! SAML2 RESPONSE: " + responseToken.getToken().getSaml2Response());
+            LOG.info("SAML2 RESPONSE: {}", responseToken.getToken().getSaml2Response());
             return result;
         });
 
         provider.setResponseAuthenticationConverter(token -> {
             var auth = OpenSaml4AuthenticationProvider.createDefaultResponseAuthenticationConverter().convert(token);
-            LOG.info("AUTHORITIES: " + auth.getAuthorities());
-            token.getResponse().getAssertions().forEach(it -> it.getAttributeStatements()
-                    .forEach(st -> st.getAttributes().forEach(attr -> LOG.info(attr.getName() + "=" + ((XSStringImpl) attr.getAttributeValues().get(0)).getValue()))));
-            return auth;
+            LOG.info("AUTHORITIES: {}", auth.getAuthorities());
+
+            var attrValues = token.getResponse().getAssertions().stream()
+                    .flatMap(as -> as.getAttributeStatements().stream())
+                    .flatMap(attrs -> attrs.getAttributes().stream())
+                        .filter(attrs -> attrs.getName().equals("member"))
+                        .findFirst().orElseThrow().getAttributeValues();
+
+            if (!attrValues.isEmpty()) {
+                var member = ((XSStringImpl) attrValues.getFirst()).getValue();
+                LOG.info("MEMBER: {}", member);
+                List<GrantedAuthority> authoritiesList = List.of(
+                        new SimpleGrantedAuthority("ROLE_USER"),
+                        new SimpleGrantedAuthority("ROLE_" + member.toUpperCase().replaceFirst("/", ""))
+                );
+
+                LOG.info("NEW AUTHORITIES: {}", authoritiesList);
+                return new Saml2Authentication((AuthenticatedPrincipal) auth.getPrincipal(), auth.getSaml2Response(), authoritiesList);
+            } else return auth;
         });
 
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize.anyRequest()
                         .authenticated())
+//                .saml2Login(withDefaults())
                 .saml2Login(saml2 -> saml2
                         .authenticationManager(new ProviderManager(provider))
                 )
-                .saml2Metadata(withDefaults())
-//                .saml2Logout(withDefaults())
-                ;
+                .saml2Metadata(withDefaults());
         return http.build();
     }
 

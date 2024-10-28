@@ -38,21 +38,6 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.opensaml</groupId>-->
-<!--            <artifactId>opensaml-core</artifactId>-->
-<!--            <version>${opensaml.version}</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.opensaml</groupId>-->
-<!--            <artifactId>opensaml-saml-impl</artifactId>-->
-<!--            <version>${opensaml.version}</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.opensaml</groupId>-->
-<!--            <artifactId>opensaml-saml-api</artifactId>-->
-<!--            <version>${opensaml.version}</version>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-saml2-service-provider</artifactId>

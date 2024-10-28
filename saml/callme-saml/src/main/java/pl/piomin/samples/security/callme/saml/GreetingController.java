@@ -9,14 +9,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/greetings")
 public class GreetingController {
 
-    @GetMapping
+    @GetMapping("/user")
     @PreAuthorize("hasAuthority('ROLE_USER')")
     public String greeting() {
         return "I'm SAML user!";
     }
 
     @GetMapping("/admin")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMINS')")
     public String admin() {
         return "I'm SAML admin!";
     }
