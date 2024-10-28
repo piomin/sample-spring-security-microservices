@@ -23,7 +23,3 @@ spring:
             assertingparty:
 #              metadata-uri: classpath:metadata/metadata-idp.xml
               metadata-uri: https://localhost:8443/realms/spring-boot-keycloak/protocol/saml/descriptor
-
-logging.level:
-  org.opensaml: TRACE
-  org.springframework.security: TRACE
