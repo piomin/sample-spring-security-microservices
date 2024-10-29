@@ -84,6 +84,19 @@
         "clientRole": false,
         "containerId": "3738491b-69e5-40ae-9f3f-07c9be43317d",
         "attributes": {}
+      },
+      {
+        "id": "25bce9c1-99b3-4f72-8f43-a9918ea4f780",
+        "name": "ADMIN",
+        "description": "",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "3738491b-69e5-40ae-9f3f-07c9be43317d",
+        "attributes": {
+          "auth": [
+            "ADMIN"
+          ]
+        }
       }
     ],
     "client": {
@@ -404,7 +417,32 @@
       ]
     }
   },
-  "groups": [],
+  "groups": [
+    {
+      "id": "ce8cf954-dcfe-4455-8128-fd814b9fdf1e",
+      "name": "admins",
+      "path": "/admins",
+      "subGroups": [],
+      "attributes": {},
+      "realmRoles": [],
+      "clientRoles": {}
+    },
+    {
+      "id": "72715461-d476-4eb9-b9aa-6332addc61f6",
+      "name": "devs",
+      "path": "/devs",
+      "subGroups": [],
+      "attributes": {
+        "dupa": [
+          "dupa"
+        ]
+      },
+      "realmRoles": [
+        "default-roles-spring-boot-keycloak"
+      ],
+      "clientRoles": {}
+    }
+  ],
   "defaultRole": {
     "id": "8c870cf2-623a-4180-9ac4-4c2732220042",
     "name": "default-roles-spring-boot-keycloak",
@@ -456,6 +494,12 @@
   "webAuthnPolicyPasswordlessAcceptableAaguids": [],
   "webAuthnPolicyPasswordlessExtraOrigins": [],
   "scopeMappings": [
+    {
+      "clientScope": "test-saml",
+      "roles": [
+        "ADMIN"
+      ]
+    },
     {
       "clientScope": "offline_access",
       "roles": [
@@ -594,7 +638,9 @@
       "publicClient": true,
       "frontchannelLogout": false,
       "protocol": "openid-connect",
-      "attributes": {},
+      "attributes": {
+        "post.logout.redirect.uris": "+"
+      },
       "authenticationFlowBindingOverrides": {},
       "fullScopeAllowed": false,
       "nodeReRegistrationTimeout": 0,
@@ -632,7 +678,9 @@
       "publicClient": false,
       "frontchannelLogout": false,
       "protocol": "openid-connect",
-      "attributes": {},
+      "attributes": {
+        "post.logout.redirect.uris": "+"
+      },
       "authenticationFlowBindingOverrides": {},
       "fullScopeAllowed": false,
       "nodeReRegistrationTimeout": 0,
@@ -680,6 +728,7 @@
         "saml.assertion.signature": "false",
         "saml.force.post.binding": "true",
         "saml_single_logout_service_url_post": "http://localhost:8081/logout/saml2/sso",
+        "post.logout.redirect.uris": "+",
         "saml.server.signature": "true",
         "saml.server.signature.keyinfo.ext": "false",
         "saml.signing.certificate": "MIIDmzCCAoOgAwIBAgIUYsSTBrFWDd52POr90F/FyUF4og4wDQYJKoZIhvcNAQELBQAwXTELMAkGA1UEBhMCUEwxDDAKBgNVBAgMA01hejEMMAoGA1UEBwwDV2FyMSEwHwYDVQQKDBhJbnRlcm5ldCBXaWRnaXRzIFB0eSBMdGQxDzANBgNVBAMMBnBpb21pbjAeFw0yNDEwMjUxOTE3MzNaFw0yNTEwMjUxOTE3MzNaMF0xCzAJBgNVBAYTAlBMMQwwCgYDVQQIDANNYXoxDDAKBgNVBAcMA1dhcjEhMB8GA1UECgwYSW50ZXJuZXQgV2lkZ2l0cyBQdHkgTHRkMQ8wDQYDVQQDDAZwaW9taW4wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCrXxU7l9VLkT9Y0TrRp0IH1gjNOW45/g4oywN0QGvXv98sm6pnm0zTasqVq5Q1whau7MgfOt8auWzAaNEvnD4/atY423yWSMLxxxzDlj4q4wfbqU+RZpvkpboEYXh28Up3pn8jkczuYcc0kRuG3z3cSLQW3NimPcm+sbt+22JRP+e3wWLuc3tQBcEdGbDoIJmtwivvhUWbjKPQ6pnfjALDoKC0ZNYGwwr702GBD7Ox9xQ6GmnBpO1CrUzAbCpM4NjgBpbWDTmmg7Hvxhbw+hxDY9SZCuqLhObO52fILA0Xsu7ok/8Fx/kSLQWyqdSICxnbeXt+ZJqhxRDKgDrHGxJ7AgMBAAGjUzBRMB0GA1UdDgQWBBTSYgKQyqymGjZy/rkMxCSQwi07ADAfBgNVHSMEGDAWgBTSYgKQyqymGjZy/rkMxCSQwi07ADAPBgNVHRMBAf8EBTADAQH/MA0GCSqGSIb3DQEBCwUAA4IBAQCfxdlLboSabkrwRPvBO9qG7B64/xxO2AbNTmfLm3AWdFMbrEigFdJ8E25WnVSmCjsZXaO5ERwrwptYXlBYtazyJo/yTpaHTUqxxTK231rhlFtzeoxLIDo3FBq4TeheaJB1r2du8YEEEjDVEAvNnhn6BKb8iM8mUzBe1bBWbBcvPp/Iv8aXqEKyHL2jel/xP6R16oys/epjHgADbg+h0td8KccIu9rfI2C8R13ovx9D1rHCtSAy6dTrYKKwgYHyxGvptCMpVlHFpzSMje0flIB9XrQLyGzYUD9jplLrfkuAHvcMQq0Hv3hFVH11I0Fn9cKSOOfAk5LsXJWfDTd3BY/E",
@@ -725,7 +774,9 @@
       "publicClient": false,
       "frontchannelLogout": false,
       "protocol": "openid-connect",
-      "attributes": {},
+      "attributes": {
+        "post.logout.redirect.uris": "+"
+      },
       "authenticationFlowBindingOverrides": {},
       "fullScopeAllowed": false,
       "nodeReRegistrationTimeout": 0,
@@ -846,6 +897,20 @@
           }
         },
         {
+          "id": "1e930327-d873-46b3-bc61-3340a8be94dc",
+          "name": "groups",
+          "protocol": "saml",
+          "protocolMapper": "saml-group-membership-mapper",
+          "consentRequired": false,
+          "config": {
+            "single": "true",
+            "attribute.nameformat": "Basic",
+            "full.path": "true",
+            "friendly.name": "groups",
+            "attribute.name": "member"
+          }
+        },
+        {
           "id": "b24377de-d078-426e-abae-42e1819d2082",
           "name": "X500 email",
           "protocol": "saml",
@@ -892,6 +957,7 @@
           "config": {
             "introspection.token.claim": "true",
             "multivalued": "true",
+            "userinfo.token.claim": "true",
             "user.attribute": "foo",
             "id.token.claim": "true",
             "access.token.claim": "true",
@@ -1404,7 +1470,8 @@
           "config": {
             "id.token.claim": "true",
             "introspection.token.claim": "true",
-            "access.token.claim": "true"
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
           }
         }
       ]
@@ -1456,13 +1523,13 @@
         "config": {
           "allowed-protocol-mapper-types": [
             "oidc-usermodel-attribute-mapper",
-            "saml-role-list-mapper",
-            "saml-user-attribute-mapper",
-            "saml-user-property-mapper",
             "oidc-full-name-mapper",
+            "saml-role-list-mapper",
             "oidc-sha256-pairwise-sub-mapper",
+            "oidc-address-mapper",
             "oidc-usermodel-property-mapper",
-            "oidc-address-mapper"
+            "saml-user-property-mapper",
+            "saml-user-attribute-mapper"
           ]
         }
       },
@@ -1503,12 +1570,12 @@
           "allowed-protocol-mapper-types": [
             "saml-user-attribute-mapper",
             "oidc-usermodel-attribute-mapper",
-            "saml-user-property-mapper",
             "oidc-full-name-mapper",
-            "oidc-sha256-pairwise-sub-mapper",
             "oidc-address-mapper",
-            "oidc-usermodel-property-mapper",
-            "saml-role-list-mapper"
+            "saml-user-property-mapper",
+            "saml-role-list-mapper",
+            "oidc-sha256-pairwise-sub-mapper",
+            "oidc-usermodel-property-mapper"
           ]
         }
       },
@@ -2258,8 +2325,12 @@
     "cibaExpiresIn": "120",
     "cibaAuthRequestedUserHint": "login_hint",
     "oauth2DeviceCodeLifespan": "600",
+    "clientOfflineSessionMaxLifespan": "0",
     "oauth2DevicePollingInterval": "5",
+    "clientSessionIdleTimeout": "0",
     "parRequestUriLifespan": "60",
+    "clientSessionMaxLifespan": "0",
+    "clientOfflineSessionIdleTimeout": "0",
     "cibaInterval": "5",
     "realmReusableOtpCode": "false"
   },
