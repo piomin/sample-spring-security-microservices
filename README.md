@@ -20,3 +20,49 @@ I'm publishing on my blog and maintaining example repositories just as a hobby. 
 3. How to use OAuth2 with Spring Cloud and integrate Spring Boot app with **Keycloak**. A detailed guide may be found in the following article: [Microservices with Spring Cloud Gateway, OAuth2 and Keycloak](https://piotrminkowski.com/2024/03/01/microservices-with-spring-cloud-gateway-oauth2-and-keycloak/)
 4. How to use SAML2 with Spring Boot and integrate it with **Keycloak** through the OpenSAML **Shibboleth** library. A detailed guide may be found in the following article: [Spring Boot with SAML2 and Keycloak](https://piotrminkowski.com/2024/10/28/spring-boot-with-saml2-and-keycloak/)
 
+
+## Getting Started
+
+### SSL
+
+To access an example with Spring Boot `SSLBundle` go to the `ssl` directory.
+First, run the `secure-callme-bundle` app:
+```shell
+cd ssl/secure-callme-bundle
+mvn spring-boot:run
+```
+
+First, run the `secure-caller-bundle` app:
+```shell
+cd ssl/secure-caller-bundle
+mvn spring-boot:run
+```
+
+Then call the endpoint exposed by the with the curl command:
+```shell
+curl https://localhost:8444/caller/ping --insecure
+```
+
+### SAML2
+
+To access an example with Spring Boot SAML 2.0 example go to the `saml` directory.
+First, run the Keycloak container:
+```shell
+cd saml
+docker compose up
+```
+
+Once the Keycloak is started go to `callme-saml` and run the app:
+```shell
+cd callme-saml
+docker compose up
+```
+
+### OAuth2
+
+To access an example with Spring Boot OAuth2 example go to the `oauth` directory.
+While building the `gateway` app it runs Testcontainer with Keycloak and simulates a downstream service:
+```shell
+cd oauth/gateway
+mvn clean package
+```
