@@ -55,7 +55,7 @@ docker compose up
 Once the Keycloak is started go to `callme-saml` and run the app:
 ```shell
 cd callme-saml
-docker compose up
+mvn spring-boot:run
 ```
 
 ### OAuth2
