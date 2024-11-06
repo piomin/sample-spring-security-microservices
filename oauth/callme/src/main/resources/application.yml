@@ -5,8 +5,21 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: http://localhost:8080/realms/demo/protocol/openid-connect/certs
-#          issuer-uri: http://localhost:8080/realms/demo
+#          jwk-set-uri: https://main-keycloak.apps.yg46z7uk.eastus.aroapp.io/realms/master/protocol/openid-connect/certs
+          jwk-set-uri: https://localhost:8443/realms/spring-boot-keycloak/protocol/openid-connect/certs
+      client:
+        provider:
+          keycloak:
+#            issuer-uri: https://main-keycloak.apps.yg46z7uk.eastus.aroapp.io/realms/master
+            issuer-uri: https://localhost:8443/realms/spring-boot-keycloak
+        registration:
+          spring:
+            provider: keycloak
+            client-id: spring
+            client-secret: ${KEYCLOAK_CLIENT_SECRET}
+#            client-secret: 4XM6nT5DQ5hA0A6Gb4hzIrilvGIfUxmp
+            authorization-grant-type: authorization_code
+            scope: openid
 
 logging.level:
   org.springframework.cloud.gateway: DEBUG
@@ -14,3 +27,10 @@ logging.level:
   org.springframework.web.reactive.function.client: TRACE
 
 server.port: 8040
+server.ssl.bundle: server
+
+#spring.ssl.bundle.jks.server.truststore:
+#  certificate: classpath:rootCA.pem
+spring.ssl.bundle.pem.server.keystore:
+  certificate: classpath:localhost-crt.pem
+  private-key: classpath:localhost-key.pem
