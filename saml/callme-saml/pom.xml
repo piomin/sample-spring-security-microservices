@@ -43,8 +43,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-saml2-service-provider</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security-saml2</artifactId>
         </dependency>
     </dependencies>
 

@@ -1,8 +1,6 @@
 package pl.piomin.samples.security.callme.saml;
 
 import org.opensaml.core.xml.schema.impl.XSStringImpl;
-import org.opensaml.saml.saml2.core.Attribute;
-import org.opensaml.saml.saml2.core.AttributeStatement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +14,7 @@ import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.saml2.core.Saml2ResponseValidatorResult;
-import org.springframework.security.saml2.provider.service.authentication.OpenSaml4AuthenticationProvider;
+import org.springframework.security.saml2.provider.service.authentication.OpenSaml5AuthenticationProvider;
 import org.springframework.security.saml2.provider.service.authentication.Saml2Authentication;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -34,9 +32,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        OpenSaml4AuthenticationProvider provider = new OpenSaml4AuthenticationProvider();
+        OpenSaml5AuthenticationProvider provider = new OpenSaml5AuthenticationProvider();
         provider.setResponseValidator((responseToken) -> {
-            Saml2ResponseValidatorResult result = OpenSaml4AuthenticationProvider
+            Saml2ResponseValidatorResult result = OpenSaml5AuthenticationProvider
                     .createDefaultResponseValidator()
                     .convert(responseToken);
             if (result == null || result.hasErrors()) {
@@ -48,7 +46,7 @@ public class SecurityConfig {
         });
 
         provider.setResponseAuthenticationConverter(token -> {
-            var auth = OpenSaml4AuthenticationProvider.createDefaultResponseAuthenticationConverter().convert(token);
+            var auth = OpenSaml5AuthenticationProvider.createDefaultResponseAuthenticationConverter().convert(token);
             LOG.info("AUTHORITIES: {}", auth.getAuthorities());
 
             var attrValues = token.getResponse().getAssertions().stream()

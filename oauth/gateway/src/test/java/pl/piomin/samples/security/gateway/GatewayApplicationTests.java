@@ -29,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @Testcontainers
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+
 public class GatewayApplicationTests {
 
     static String accessToken;
