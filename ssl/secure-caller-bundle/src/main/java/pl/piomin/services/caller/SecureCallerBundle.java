@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.support.DefaultSingletonBeanRegistry;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.web.client.RestClientSsl;
+import org.springframework.boot.restclient.RestTemplateBuilder;
+import org.springframework.boot.restclient.autoconfigure.RestClientSsl;
 import org.springframework.boot.ssl.SslBundles;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestClient;
@@ -39,9 +39,9 @@ public class SecureCallerBundle {
             }
             DefaultSingletonBeanRegistry registry = (DefaultSingletonBeanRegistry) context.getAutowireCapableBeanFactory();
             registry.destroySingleton("restTemplate");
-            registry.registerSingleton("restTemplate", builder.setSslBundle(sslBundle).build());
+            registry.registerSingleton("restTemplate", builder.sslBundle(sslBundle).build());
         });
-        return builder.setSslBundle(sslBundles.getBundle("client")).build();
+        return builder.sslBundle(sslBundles.getBundle("client")).build();
     }
 
     @Value("${client.url}")

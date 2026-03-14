@@ -2,25 +2,20 @@ package pl.piomin.services.callme;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.restclient.RestTemplateBuilder;
+import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureTestRestTemplate;
 import org.springframework.boot.ssl.SslBundles;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
-import org.springframework.http.client.ClientHttpRequestFactory;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
-
-import javax.net.ssl.SSLContext;
-
-import java.net.http.HttpClient;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureTestRestTemplate
 public class SecureCallmeBundleTest {
 
     @Autowired
@@ -39,7 +34,7 @@ public class SecureCallmeBundleTest {
         @Bean
         @Primary
         RestTemplate restTemplate(RestTemplateBuilder builder, SslBundles sslBundles) {
-            return builder.setSslBundle(sslBundles.getBundle("server")).build();
+            return builder.sslBundle(sslBundles.getBundle("server")).build();
         }
     }
 }
