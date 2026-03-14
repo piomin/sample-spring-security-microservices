@@ -2,11 +2,11 @@ package pl.piomin.samples.security.gateway;
 
 import dasniko.testcontainers.keycloak.KeycloakContainer;
 import org.apache.http.client.utils.URIBuilder;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -33,9 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class GatewayApplicationTests {
 
     static String accessToken;
-
-    @Autowired
-    WebTestClient webTestClient;
+    static WebTestClient webTestClient;
 
     @Container
     static KeycloakContainer keycloak = new KeycloakContainer()
@@ -52,6 +50,13 @@ public class GatewayApplicationTests {
                 () -> "http://localhost:8060");
         registry.add("spring.cloud.gateway.routes[0].id", () -> "callme-service");
         registry.add("spring.cloud.gateway.routes[0].predicates[0]", () -> "Path=/callme/**");
+    }
+
+    @BeforeAll
+    static void setup() {
+        webTestClient = WebTestClient.bindToServer()
+                .baseUrl("http://localhost:8060")
+                .build();
     }
 
     @Test
